@@ -6,33 +6,38 @@ import os
 load_dotenv()
 
 
-def get_saved_tracks():
+def get_saved_tracks(client_id, secret_key, redirect_uri):
     """
     Fetches all the saved tracks for the user ( this is the liked songs in spotify )
     :param client_id: client_id for the app [ found in the api dashboard ]
     :param secret_key: secret_key for the app [ found in the api dashboard ]
     :param redirectURI: redirect URI for authentication
-    <!-------------Need to setup params for this function----------------!>
-
     """
-    #load creadentials
-    SPOTIPY_CLIENT_ID  = os.getenv('ClientId')
-    SPOTIPY_REDIRECT_URI = os.getenv('RedirectURI')
-    SPOTIPY_CLIENT_SECRET = os.getenv('SecretKey')
 
+    #defines permissions required for the request call
     scope = "user-library-read"
-    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET,redirect_uri=SPOTIPY_REDIRECT_URI,scope=scope))
 
+    #authenticate user for request call
+    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id, client_secret=secret_key,redirect_uri=redirect_uri,scope=scope))
 
+    counter = 0
+    while sp.current_user_saved_tracks(offset=counter):
+        results = sp.current_user_saved_tracks(limit=50, offset=counter)
+        if len(results['items']) != 0:
+            for idx, item in enumerate(results['items']):
+                track = item['track']
+                print(idx, track['artists'][0]['name'],"-", track['name'])
+            counter += 50 
+        else:
+            break
+    
+    #code to store all the tracks in a list
+    tracks = []
 
-    results = sp.current_user_saved_tracks(limit=50, offset=50)
-    for idx, item in enumerate(results['items']):
-        track = item['track']
-        print(idx, track['artists'][0]['name'],"-", track['name'])
+    return tracks
     
     """
     TO-DO:
-    - run a loop to get all the saved tracks for the user, for now we can only get 50 tracks in one request
     - store all the tracks in a list and share that as an output for this function
     """
 
@@ -40,11 +45,35 @@ def get_saved_tracks():
 def get_devices():
     pass
 
-def get_user_info():
-    pass
+def get_user_info(client_id, secret_key, redirect_uri):
+
+    #defines permissions required for the request call
+    scope = "user-library-read"
+
+    #authenticate user for the request
+    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id, client_secret=secret_key,redirect_uri=redirect_uri,scope=scope))
+    user_info = sp.current_user()
+
+    print(json.dumps(user_info))
+
+    return user_info
 
 def get_user_playlists():
     pass
 
 def get_tracks_from_playlists():
     pass
+
+
+
+if __name__ == "__main__":
+
+    load_dotenv()
+
+    client_id = os.getenv('ClientID')
+    secret_key = os.getenv('SecretKey')
+    redirect_uri = os.getenv('RedirectURI')
+
+    get_saved_tracks(client_id,secret_key,redirect_uri)
+
+    get_user_info(client_id,secret_key,redirect_uri)
