@@ -43,9 +43,18 @@ def get_saved_tracks(client_id, secret_key, redirect_uri):
 
 
 def get_devices():
+    #do we need this? 
     pass
 
 def get_user_info(client_id, secret_key, redirect_uri):
+
+    """
+    Fetches the user information for the current user 
+    :param client_id: client_id for the app [ found in the api dashboard ]
+    :param secret_key: secret_key for the app [ found in the api dashboard ]
+    :param redirectURI: redirect URI for authentication
+    """
+
 
     #defines permissions required for the request call
     scope = "user-library-read"
