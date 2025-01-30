@@ -94,6 +94,15 @@ def get_user_playlists(client_id, secret_key, redirect_uri):
 
 
 def get_tracks_from_playlists():
+    """
+    For a given playlist it extracts all tracks in it 
+    :param client_id: client_id for the app [ found in the api dashboard ]
+    :param secret_key: secret_key for the app [ found in the api dashboard ]
+    :param redirectURI: redirect URI for authentication
+    :param playlist_id: identifier for the playlist whose tracks we need to extract
+    """
+
+
     pass
 
 
