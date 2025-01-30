@@ -93,7 +93,7 @@ def get_user_playlists(client_id, secret_key, redirect_uri):
 
 
 
-def get_tracks_from_playlists():
+def get_tracks_from_playlists(playlist_id, client_id, secret_key, redirect_uri):
     """
     For a given playlist it extracts all tracks in it 
     :param client_id: client_id for the app [ found in the api dashboard ]
@@ -102,8 +102,29 @@ def get_tracks_from_playlists():
     :param playlist_id: identifier for the playlist whose tracks we need to extract
     """
 
+    scope = 'user-library-read'
 
-    pass
+    #authenticate user for the request
+    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id, client_secret=secret_key,redirect_uri=redirect_uri,scope=scope))
+    results = sp.playlist_items(playlist_id, limit=100)
+    total_tracks = results['total']
+    total_tracks_extracted = counter = 0
+    tracks = [] 
+    while total_tracks != total_tracks_extracted: 
+        results = sp.playlist_items(playlist_id, limit=100, offset=counter)
+
+        for item in results['items']:
+            #append all tracks extracted in the list
+            tracks.append(item['track']['name'])
+
+        # increase the counter by 100 to get the next set of tracks 
+        counter += 100
+
+        #update the total extracted count for every iteration
+        total_tracks_extracted = len(tracks)
+
+
+    return tracks
 
 
 
@@ -123,3 +144,6 @@ if __name__ == "__main__":
 
     print('below are the playlists of the current user: \n \n')
     get_user_playlists(client_id,secret_key,redirect_uri)
+
+
+    get_tracks_from_playlists(playlist_id,client_id,secret_key,redirect_uri)
