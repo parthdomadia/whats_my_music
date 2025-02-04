@@ -44,6 +44,7 @@ def get_saved_tracks(client_id, secret_key, redirect_uri):
 
 def get_devices():
     #do we need this? 
+    #as of now we dont need this
     pass
 
 def get_user_info(client_id, secret_key, redirect_uri):
