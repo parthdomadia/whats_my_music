@@ -36,10 +36,6 @@ def get_saved_tracks(client_id, secret_key, redirect_uri):
 
     return tracks
     
-    """
-    TO-DO:
-    - store all the tracks in a list and share that as an output for this function
-    """
 
 
 def get_devices():
